@@ -1,0 +1,1 @@
+﻿const p=require('puppeteer-core');(async()=>{const b=await p.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:'new',args:['--no-sandbox','--disable-gpu']});const pg=await b.newPage();console.log('route:',typeof pg.route);await b.close();})().catch(e=>{console.error('ERR:'+e.message);process.exit(1)})

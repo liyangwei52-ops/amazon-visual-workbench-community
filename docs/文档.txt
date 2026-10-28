@@ -1,0 +1,5 @@
+先阅读 AGENTS.md、AI_QUICKSTART.md 和 docs/AI_HANDOFF.md。
+简述项目用途、相关页面和数据流，以及不能破坏的规则。
+然后处理下面的任务，并说明修改内容和验证结果：
+
+本次任务：……

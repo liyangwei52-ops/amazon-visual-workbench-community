@@ -1,0 +1,19 @@
+# Local credentials and workstation state must never be uploaded.
+.env*
+.git
+.next
+.next-verify*
+node_modules
+.agents
+.codex
+*.tsbuildinfo
+*.log
+
+# Local verification includes test inputs, responses and screenshots.
+scripts
+verification
+preview-*.png
+AGENTS.md
+CLAUDE.md
+项目概述.md
+backups

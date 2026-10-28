@@ -1,0 +1,4 @@
+const fs=require('fs'),path=require('path'),ts=require('typescript');
+require.extensions['.ts']=(module,filename)=>module._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:1,target:9,esModuleInterop:true}}).outputText,filename);
+const {extractPlannerDoc}=require('../src/lib/planner-doc.ts');
+(async()=>{const input='G:/2026/10月/测试/一键策划测试/cos服装图片策划 副本.xlsx';const doc=await extractPlannerDoc(new File([fs.readFileSync(input)],path.basename(input)));const summary={file:doc.fileName,text:doc.text,images:doc.images.map(({name,source,dataUrl})=>({name,source,chars:dataUrl.length})),droppedImages:doc.droppedImages};fs.writeFileSync('verification/three-real-tests/planner-source-audit.json',JSON.stringify(summary,null,2));console.log(JSON.stringify(summary,null,2))})()

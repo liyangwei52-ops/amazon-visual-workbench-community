@@ -1,0 +1,21 @@
+import assert from "node:assert/strict"
+import { imageFailureOutcome, readImageFailure } from "../src/lib/image-failure"
+
+assert.equal(imageFailureOutcome(503, "Current group upstream load is saturated"), "failed")
+assert.equal(imageFailureOutcome(500, "no available channel for model"), "failed")
+assert.equal(imageFailureOutcome(429, "rate limit reached"), "failed")
+assert.equal(imageFailureOutcome(401, "invalid key"), "failed")
+assert.equal(imageFailureOutcome(500, "user quota is not enough"), "failed")
+assert.equal(imageFailureOutcome(500, "insufficient credit balance"), "failed")
+const quota = readImageFailure(403, { error: "user quota is not enough (request id: quota-test-123)" })
+assert.equal(quota.outcome, "failed")
+assert.ok(quota.message.includes("余额或额度不足") && quota.message.includes("quota-test-123") && quota.message.includes("不会自动重发"))
+assert.equal(imageFailureOutcome(408, "request timeout"), "interrupted")
+assert.equal(imageFailureOutcome(502, "Bad gateway"), "interrupted")
+assert.equal(imageFailureOutcome(504, "Upstream timed out"), "interrupted")
+const busy = readImageFailure(500, { error: { message: "Current group upstream load is saturated (request id: test-123)" } })
+assert.equal(busy.outcome, "failed")
+assert.ok(busy.message.includes("负载已满") && busy.message.includes("test-123"))
+assert.equal(readImageFailure(500, { outcome: "failed", error: "明确拒绝" }).outcome, "failed")
+assert.equal(readImageFailure(502, { outcome: "interrupted", error: "断线" }).message, "断线")
+console.log("PASS: 明确拒绝、繁忙、限流、超时、网关断线的状态与原始错误保留")

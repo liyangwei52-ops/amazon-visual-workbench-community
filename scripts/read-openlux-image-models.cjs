@@ -1,0 +1,3 @@
+const fs=require('node:fs')
+async function main(){const lines=fs.readFileSync('G:/2026/10月/测试/api.txt','utf8').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const endpoint=lines[lines.indexOf('生图Api网址')+1].replace(/\/$/,'');const key=lines[lines.indexOf('生图Key')+1];const r=await fetch(endpoint+'/models',{headers:{Authorization:'Bearer '+key}});const body=await r.json();const models=(body.data||[]).map(x=>x.id).filter(x=>/gemini-(?:3-pro|3\.1).*image|^gpt-image-2$/.test(x));const result={status:r.status,models};fs.writeFileSync('verification/model-sizing/model-access.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result))}
+main().catch(e=>{console.error('读取模型列表失败：'+e.name);process.exitCode=1})
